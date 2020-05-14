@@ -114,8 +114,7 @@ if __name__ == '__main__':
         rates = run(graph, game, alpha, T)
         return rates[-1]
 
-    for i in range(1, 11):
-        timer = Timer()
-        draw_contour(bs, alphas, fun, pool_size=i)
-        print(f'pool size = {i}', end=' ')
-        timer.print_elapsed()
+    timer = Timer()
+    draw_contour(bs, alphas, fun, pool_size=4)
+    print(f'pool size = {4}', end=' ')
+    timer.print_elapsed()
