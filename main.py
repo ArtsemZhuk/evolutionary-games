@@ -117,10 +117,10 @@ if __name__ == '__main__':
         return rates[-1]
 
     # os.system("taskset -p 0xff %d" % os.getpid())
-    pool_size = multiprocessing.cpu_count()
-    os.system('taskset -cp 0-%d %s' % (pool_size, os.getpid()))
+    # pool_size = multiprocessing.cpu_count()
+    # os.system('taskset -cp 0-%d %s' % (pool_size, os.getpid()))
 
     timer = Timer()
-    draw_contour(bs, alphas, fun, pool_size=4)
-    print(f'pool size = {4}', end=' ')
+    draw_contour_slow(bs, alphas, fun)
+    # print(f'pool size = {4}', end=' ')
     timer.print_elapsed()
