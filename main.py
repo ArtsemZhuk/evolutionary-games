@@ -1,11 +1,12 @@
 import random
 import numpy as np
-from math import exp
 from graph import *
 from viz import draw_contour, draw_contour_slow
 from game import PrisonerDilemma
 from utils import Timer
+import math
 import os
+import multiprocessing
 
 INF = 10 ** 18
 
@@ -36,7 +37,7 @@ def sigmoid(x):
         return 1
     if x < -100:
         return 0
-    return 1. / (1 + np.exp(-x))
+    return 1. / (1 + math.exp(-x))
 
 
 def run(graph, game, alpha, T):
@@ -115,7 +116,9 @@ if __name__ == '__main__':
         rates = run(graph, game, alpha, T)
         return rates[-1]
 
-    os.system("taskset -p 0xff %d" % os.getpid())
+    # os.system("taskset -p 0xff %d" % os.getpid())
+    pool_size = multiprocessing.cpu_count()
+    os.system('taskset -cp 0-%d %s' % (pool_size, os.getpid()))
 
     timer = Timer()
     draw_contour(bs, alphas, fun, pool_size=4)
