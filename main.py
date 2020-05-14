@@ -5,6 +5,7 @@ from graph import *
 from viz import draw_contour, draw_contour_slow
 from game import PrisonerDilemma
 from utils import Timer
+import os
 
 INF = 10 ** 18
 
@@ -113,6 +114,8 @@ if __name__ == '__main__':
         T = 100
         rates = run(graph, game, alpha, T)
         return rates[-1]
+
+    os.system("taskset -p 0xff %d" % os.getpid())
 
     timer = Timer()
     draw_contour(bs, alphas, fun, pool_size=4)
