@@ -20,6 +20,6 @@ if __name__ == '__main__':
     # os.system('taskset -cp 0-%d %s' % (pool_size, os.getpid()))
 
     timer = Timer()
-    draw_contour(graph, bs, alphas)
+    draw_contour(graph, bs, alphas, pool_size=32)
     # print(f'pool size = {4}', end=' ')
     timer.print_elapsed()
