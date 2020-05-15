@@ -15,11 +15,8 @@ if __name__ == '__main__':
     alphas = np.arange(0.01, 0.16, 0.02)
     bs = np.arange(3, 10, .25)
 
-    # os.system("taskset -p 0xff %d" % os.getpid())
-    # pool_size = multiprocessing.cpu_count()
-    # os.system('taskset -cp 0-%d %s' % (pool_size, os.getpid()))
-
-    timer = Timer()
-    draw_contour(graph, bs, alphas, pool_size=32)
-    # print(f'pool size = {4}', end=' ')
-    timer.print_elapsed()
+    for i in range(1, 65):
+        timer = Timer()
+        draw_contour(graph, bs, alphas, pool_size=i)
+        print(f'pool size = {i}', end=' ')
+        timer.print_elapsed()
