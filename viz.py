@@ -2,17 +2,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from multiprocessing import Pool
 from utils import Timer
+from engine import fun
 
 
-def draw_contour(x, y, f, pool_size=4):
-    # X, Y = np.meshgrid(x, y)
-    # z = f(X, Y)
-    def g(tuple):
-        x, y = tuple
-        return f(x, y)
-
+def draw_contour(graph, x, y, pool_size=4):
     p = Pool(pool_size)
-    c = list(map(g, [(a, b) for b in y for a in x]))
+    c = p.map(fun, [(graph, a, b) for b in y for a in x])
     z = np.reshape(c, [len(y), len(x)])
 
     fig, ax = plt.subplots()
