@@ -23,6 +23,18 @@ class Graph:
         self.N[u].append(v)
         self.N[v].append(u)
 
+    def remove_edge(self, u, v):
+        # TODO add checks
+        self.N[u].remove(v)
+        self.N[v].remove(u)
+        if (u, v) in self.E:
+            self.E.remove((u, v))
+        elif (v, u) in self.E:
+            self.E.remove((v, u))
+        else:
+            pass
+            # TODO raise
+
     def density(self):
         n = len(self.V)
         return len(self.E) / (n * (n - 1) // 2)
@@ -55,15 +67,6 @@ def FullGraph(n):
     return ErdosRenyi(n, 1.1)
 
 
-def Circle(n):
-    graph = Graph()
-    graph.add_vertices(range(n))
-    for i in range(n):
-        j = (i + 1) % n
-        graph.add_edge(i, j)
-    return graph
-
-
 def ScaleFree(n, m):
     graph = FullGraph(m + 1)
     us = [v for _ in range(m) for v in graph.V]
@@ -80,8 +83,31 @@ def ScaleFree(n, m):
             us.append(u)
             us.append(v)
 
-    # print(f'len us = {len(us)}')
+    return graph
 
+
+def Circle(n, k=1):
+    graph = Graph()
+    graph.add_vertices(range(n))
+    for i in range(n):
+        for t in range(1, k + 1):
+            j = (i + t) % n
+            graph.add_edge(i, j)
+    return graph
+
+
+def SmallWorld(n, k, beta):
+    graph = Circle(n, k)
+    for i in range(n):
+        for t in range(1, k + 1):
+            if random.uniform(0, 1) < beta: # TODO replace with bin variable, add to utils
+                j = (i + t) % n
+                graph.remove_edge(i, j)
+                while True:
+                    j = random.randint(0, n - 1)
+                    if j not in graph.N[i]:
+                        break
+                graph.add_edge(i, j)
     return graph
 
 
