@@ -1,8 +1,10 @@
-import numpy as np
-import matplotlib.pyplot as plt
 from multiprocessing import Pool
-from utils import Timer
+
+import matplotlib.pyplot as plt
+import numpy as np
+
 from engine import fun
+from utils import Timer
 
 
 def draw_data(x, y, cz):
@@ -11,6 +13,11 @@ def draw_data(x, y, cz):
     cs = ax.contourf(x, y, z, levels=100)
     fig.colorbar(cs, ax=ax)
     plt.show()
+
+
+def draw_contour(graph, x, y, T, pool_size=4):
+    p = Pool(pool_size)
+    return p.map(fun, [(graph, a, b, T) for b in y for a in x])
 
 
 def draw_contour_slow(x, y, f):

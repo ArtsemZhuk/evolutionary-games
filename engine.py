@@ -1,7 +1,8 @@
 import random
-from utils import sigmoid, pack_to_tuple
-from player import Player
+
 from game import PrisonerDilemma
+from player import Player
+from utils import sigmoid
 
 INF = 10 ** 18
 

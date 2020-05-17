@@ -1,9 +1,8 @@
-import random
 import numpy as np
-from graph import *
-from viz import draw_contour, draw_contour_slow
-from utils import Timer
 
+from graph import *
+from utils import Timer
+from viz import draw_contour
 
 if __name__ == '__main__':
     n = 1000
