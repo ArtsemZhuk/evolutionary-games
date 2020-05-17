@@ -17,9 +17,9 @@ def draw_scale_free():
     plt.show()
 
 
-def draw_small_world():
+def draw_small_world(n, k, beta):
     timer = Timer()
-    graph = SmallWorld(10000, 20, .5)
+    graph = SmallWorld(n, k, beta)
     print(f'Elapsed for generation {timer.measure()}')
     print(f'Average degree = {graph.average_degree()}')
     degs = graph.degrees()
@@ -30,5 +30,5 @@ def draw_small_world():
 
 
 if __name__ == '__main__':
-    draw_small_world()
+    draw_small_world(10000, 20, .7)
 

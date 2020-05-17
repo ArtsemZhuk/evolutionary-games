@@ -13,8 +13,10 @@ class Graph:
             self.N[v] = []
 
     def add_edge(self, u, v):
-        if not u in self.V or not v in self.V:
+        if u not in self.V or v not in self.V:
             raise Exception(f"{u} or {v} no present in {self.V}")
+        if u == v:
+            raise Exception(f'Trying to make a loop over {u}!')
 
         if (u, v) in self.E or (v, u) in self.E:
             return
@@ -105,7 +107,7 @@ def SmallWorld(n, k, beta):
                 graph.remove_edge(i, j)
                 while True:
                     j = random.randint(0, n - 1)
-                    if j not in graph.N[i]:
+                    if j != i and j not in graph.N[i]:
                         break
                 graph.add_edge(i, j)
     return graph
