@@ -14,9 +14,10 @@ if __name__ == '__main__':
 
     alphas = np.arange(0.01, 0.16, 0.02)
     bs = np.arange(3, 10, .25)
+    T = 100
 
     for i in range(1, 65):
         timer = Timer()
-        draw_contour(graph, bs, alphas, pool_size=i)
+        draw_contour(graph, bs, alphas, T, pool_size=i)
         print(f'pool size = {i}', end=' ')
         timer.print_elapsed()

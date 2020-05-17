@@ -65,9 +65,8 @@ def run(graph, game, alpha, T):
 
 
 def fun(tuple):
-    graph, b, alpha = tuple
+    graph, b, alpha, T = tuple
     c = 1
     game = PrisonerDilemma(b / b, c / b)
-    T = 100
     rates = run(graph, game, alpha, T)
-    return rates[-1]
+    return rates

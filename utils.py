@@ -1,5 +1,8 @@
 import time
 import math
+from multiprocessing import Pool
+from engine import fun
+
 
 class Timer:
     def __init__(self):
@@ -27,5 +30,10 @@ def sigmoid(x):
     if x < -100:
         return 0
     return 1. / (1 + math.exp(-x))
+
+
+def draw_contour(graph, x, y, T, pool_size=4):
+    p = Pool(pool_size)
+    return p.map(fun, [(graph, a, b, T) for b in y for a in x])
 
 

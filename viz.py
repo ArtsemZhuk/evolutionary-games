@@ -5,11 +5,8 @@ from utils import Timer
 from engine import fun
 
 
-def draw_contour(graph, x, y, pool_size=4):
-    p = Pool(pool_size)
-    c = p.map(fun, [(graph, a, b) for b in y for a in x])
-    z = np.reshape(c, [len(y), len(x)])
-
+def draw_data(x, y, cz):
+    z = np.reshape(cz, [len(y), len(x)])
     fig, ax = plt.subplots()
     cs = ax.contourf(x, y, z, levels=100)
     fig.colorbar(cs, ax=ax)
