@@ -2,21 +2,21 @@ import numpy as np
 
 from graph import *
 from utils import Timer
-from viz import draw_contour
+from viz import draw_contour, draw_data
+
 
 if __name__ == '__main__':
     n = 1000
     p = 4. / n
     # graph = ErdosRenyi(n, p)
     # graph = Grid(40, 40)
-    graph = ScaleFree(1000, 3)
+    graph = ScaleFree(10, 3)
 
-    alphas = np.arange(0.01, 0.16, 0.02)
-    bs = np.arange(3, 10, .25)
-    T = 100
+    alphas = np.arange(0.01, 0.16, 0.01)
+    bs = np.arange(3, 10, .08)
+    T = 2
 
-    for i in range(1, 65):
-        timer = Timer()
-        draw_contour(graph, bs, alphas, T, pool_size=i)
-        print(f'pool size = {i}', end=' ')
-        timer.print_elapsed()
+    timer = Timer()
+    cz = list(map(np.mean, draw_contour(graph, bs, alphas, T, pool_size=4)))
+    draw_data(bs, alphas, cz, levels=[.5, .7, .9])
+    timer.print_elapsed()
