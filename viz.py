@@ -13,7 +13,8 @@ def draw_data(x, y, cz, levels=[]):
     fig, ax = plt.subplots()
     CSF = ax.contourf(x, y, z, levels=100)
     CS = ax.contour(x, y, z, levels=levels, colors='black', linestyles='dashed')
-    fig.colorbar(CSF, ax=ax)
+    fig.colorbar(CSF, ax=ax, orientation='horizontal')
+    plt.clabel(CS, fmt='%1.1f', colors='k', fontsize=14)  # contour line labels
     plt.show()
 
 

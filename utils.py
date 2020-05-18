@@ -1,6 +1,6 @@
 import math
 import time
-
+import numpy as np
 
 class Timer:
     def __init__(self):
@@ -30,5 +30,7 @@ def sigmoid(x):
     return 1. / (1 + math.exp(-x))
 
 
-
+def partition(l, r, n):
+    chunk = (r - l) / n
+    return np.arange(l + chunk, r + chunk / 2, chunk)
 
