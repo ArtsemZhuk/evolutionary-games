@@ -30,5 +30,7 @@ def draw_small_world(n, k, beta):
 
 
 if __name__ == '__main__':
-    draw_small_world(10000, 20, .7)
+    # draw_small_world(10000, 20, .7)
+    pass
+
 

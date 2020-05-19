@@ -18,3 +18,6 @@ class Player:
                 cnt += 1
         return cnt / self.sz()
 
+    def rigidity(self):
+        return 1 - abs(1 - 2 * self.coop_rate())
+
