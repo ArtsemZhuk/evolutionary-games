@@ -42,7 +42,7 @@ cdef vector[double] run(vector[vector[int]] graph, vector[vector[pair[double, do
 			g_avg[i] = 0
 			for to in graph[i]:
 				g_avg[i] += g[i][to]
-			g_avg[i] /= graph[i].size()
+			g_avg[i] /= max(1, graph[i].size())
 		for i in range(n):
 			best = -1e18
 			cur_best_s = -1
@@ -67,7 +67,7 @@ cdef vector[double] run(vector[vector[int]] graph, vector[vector[pair[double, do
 			cr = 0
 			for to in graph[i]:
 				if strat[i][to] == 0: cr += 1
-			cr /= graph[i].size()
+			cr /= max(1, graph[i].size())
 			r += cr
 		r /= n
 		coop_rates[it] = r
