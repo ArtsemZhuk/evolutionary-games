@@ -110,7 +110,7 @@ def calc(alphas, bs, T, I, n, p):
     cdef vector[vector[vector[pair[double, double]]]] games
     cdef vector[vector[int]] g
     cdef double cb, cc
-    cdef vector[pair[int, int]] grid
+    cdef vector[pair[double, double]] grid
     cdef int TT
     res = []
     for i in range(I):
