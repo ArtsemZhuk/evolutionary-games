@@ -28,7 +28,7 @@ def run(graph, game, alpha, T):
             players[u].g[v] = pu
             players[v].g[u] = pv
 
-        cnt = dict()
+        # cnt = dict()
 
         for p in players.values():
             p.g_avg = sum(p.g.values()) / p.sz()
@@ -47,7 +47,7 @@ def run(graph, game, alpha, T):
             delta = (best - p.g_avg)
             # TODO b = 1 ensure ????
             prob = sigmoid(delta / alpha)
-            cnt[best_s] = cnt.get(best_s, 0) + 1
+            # cnt[best_s] = cnt.get(best_s, 0) + 1
 
             p.prob = prob
             p.best_s = best_s

@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import networkx as nx
 
 from graph import *
 from utils import Timer
@@ -31,6 +32,11 @@ def draw_small_world(n, k, beta):
 
 if __name__ == '__main__':
     # draw_small_world(10000, 20, .7)
-    pass
+    graph = RandomRegular(100, 3)
+    G = nx.Graph()
+    G.add_edges_from(graph.E)
+    plt.subplot()
+    nx.draw(G)
+    plt.show()
 
 

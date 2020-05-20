@@ -127,3 +127,28 @@ def Grid(n, m):
                 tj = (j + dy) % m
                 graph.add_edge((i, j), (ti, tj))
     return graph
+
+
+def RandomRegular(n, k):
+    if n * k % 2 == 1 or n <= k:
+        raise Exception(f'Can build regular graph with {n} vertices and deg {k}')
+    while True:
+        a = list(range(n * k))
+        random.shuffle(a)
+
+        graph = Graph()
+        graph.add_vertices(range(n))
+
+        good = True
+
+        for i in range(0, n * k, 2):
+            u = a[i] // k
+            v = a[i + 1] // k
+            if u == v or (u, v) in graph.E or (v, u) in graph.E:
+                good = False
+                break
+            else:
+                graph.add_edge(u, v)
+        if good:
+            return graph
+
