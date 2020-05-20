@@ -118,6 +118,7 @@ def calc(alphas, bs, T, I, n, p, num_threads=32):
     cdef double cb, cc
     cdef vector[pair[double, double]] grid
     cdef int TT
+    cdef int NT = num_threads
     res = []
     for i in range(I):
         graph = ErdosRenyi(n, p)
@@ -130,7 +131,7 @@ def calc(alphas, bs, T, I, n, p, num_threads=32):
         cur_res = vector[vector[double]](len(grid))
 
         TT = T
-        with nogil, parallel(num_threads=num_threads):
+        with nogil, parallel(num_threads=NT):
             for j in prange(grid.size()):
                 cur_res[j] = run(g, games[j], grid[j].first, TT)
         res.append(list(cur_res))
