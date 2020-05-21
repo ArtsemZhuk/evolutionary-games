@@ -129,11 +129,18 @@ def Grid(n, m):
     return graph
 
 
-def RandomRegular(n, k):
-    if n * k % 2 == 1 or n <= k:
-        raise Exception(f'Can build regular graph with {n} vertices and deg {k}')
+def GraphByDegrees(degs):
+    a = []
+    n = 0
+    for d, cnt in degs.items():
+        for i in range(cnt):
+            a += [n] * d
+            n += 1
+
+    if len(a) % 2 != 0:
+        raise Exception(f'sum of degrees uneven')
+
     while True:
-        a = list(range(n * k))
         random.shuffle(a)
 
         graph = Graph()
@@ -141,14 +148,21 @@ def RandomRegular(n, k):
 
         good = True
 
-        for i in range(0, n * k, 2):
-            u = a[i] // k
-            v = a[i + 1] // k
+        for i in range(0, len(a), 2):
+            u = a[i]
+            v = a[i + 1]
             if u == v or (u, v) in graph.E or (v, u) in graph.E:
                 good = False
                 break
             else:
                 graph.add_edge(u, v)
+        # TODO check if connected
         if good:
             return graph
+
+
+def RandomRegular(n, k):
+    if n * k % 2 == 1 or n <= k:
+        raise Exception(f'Can build regular graph with {n} vertices and deg {k}')
+    return GraphByDegrees({k : n})
 
