@@ -6,16 +6,7 @@ from utils import Timer
 from viz import draw_contour, draw_data
 from engine_exp import fun_exp
 from engine_mono import fun_mono
-
-
-def run_exp(graph, b, alpha, T):
-    res = fun_exp((graph, b, alpha, T))
-    return res
-
-
-def run_mono(graph, b, alpha, T):
-    res = fun_mono((graph, b, alpha, T))
-    return res
+from engine_sum import fun_sum
 
 
 if __name__ == '__main__':
@@ -26,7 +17,8 @@ if __name__ == '__main__':
     # graph = ScaleFree(10, 3)
 
     timer = Timer()
-    res = run_mono(graph, 4, .1, 1000)
+    # res = fun_mono((graph, 10, .1, 1000))
+    res = fun_sum((graph, 5, .025, 100))
     timer.print_elapsed()
     plt.plot(res)
     plt.show()

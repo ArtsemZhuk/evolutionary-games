@@ -23,6 +23,14 @@ def run(graph, game, alpha, T):
     coop_rates = []
 
     for _ in range(T):
+        for p in players.values():
+            p.sum_half = np.zeros_like(p.mixed_s)
+            for other in p.op:
+                p.sum_half += players[other].mixed_s
+            p.sum_half /= p.sz()
+            p.g_avg = p.mixed_s.dot(game.matrix).dot(p.sum_half.T)
+        """
+
         for u, v in graph.E:
             su = players[u].mixed_s
             sv = players[v].mixed_s
@@ -32,6 +40,7 @@ def run(graph, game, alpha, T):
 
         for p in players.values():
             p.g_avg = sum(p.g.values()) / p.sz()
+        """
 
         for p in players.values():
             best_g = -INF

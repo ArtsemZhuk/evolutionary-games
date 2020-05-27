@@ -39,7 +39,20 @@ def draw_spectrum(graphs):
     plt.show()
 
 
+def np_dot():
+    x = np.array([0, 1])
+    y = np.array([1, 0])
+    m = np.array([[1, 2], [3, 4]])
+    print(x.dot(m))
+    print(y.dot(m))
+    print(x.dot(m).dot(y.T))
+    print(x.dot(m).dot(y.T))
+    print(x.dot(m.dot(y.T)))
+
+
 if __name__ == '__main__':
+    np_dot()
+    exit(0)
     # draw_small_world(10000, 20, .7)
     # graph = RandomRegular(100, 3)
     # graph = GraphByDegrees({3: 10, 5: 10, 7: 10})

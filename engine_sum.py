@@ -22,21 +22,18 @@ def run(graph, game, alpha, T):
     coop_rates = []
 
     for _ in range(T):
-        for u, v in graph.E:
-            su = players[u].mixed_s
-            sv = players[v].mixed_s
-            pu, pv = game.mixed_payoff(su, sv)
-            players[u].g[v] = pu
-            players[v].g[u] = pv
-
         for p in players.values():
-            p.g_avg = sum(p.g.values()) / p.sz()
+            p.sum_half = np.zeros_like(p.mixed_s)
+            for other in p.op:
+                p.sum_half += players[other].mixed_s
+            p.sum_half /= p.sz()
+            p.g_avg = p.mixed_s.dot(game.matrix).dot(p.sum_half.T)
             p.temp_s = p.mixed_s * np.exp(p.g_avg / alpha)
 
         for p in players.values():
             p.mixed_s = np.array(p.temp_s)
-            for other in p.op():
-                p.mixed_s += p[other].temp_s
+            for other in p.op:
+                p.mixed_s += players[other].temp_s
             p.mixed_s /= np.sum(p.mixed_s)
 
         r = [p.coop_rate() for p in players.values()]

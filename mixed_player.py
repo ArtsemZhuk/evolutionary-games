@@ -10,6 +10,7 @@ class MixedPlayer:
         self.temp_s = np.array([0, 1])
         self.best_g = 0
         self.best_s = np.array([0, 1])
+        self.half = np.array([])
 
     def sz(self):
         return max(1, len(self.op))
