@@ -29,7 +29,6 @@ def run(graph, game, alpha, T):
             pu, pv = game.mixed_payoff(su, sv)
             players[u].g[v] = pu
             players[v].g[u] = pv
-            print(pu, pv)
 
         for p in players.values():
             p.g_avg = sum(p.g.values()) / p.sz()
