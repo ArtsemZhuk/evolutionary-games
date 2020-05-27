@@ -38,6 +38,11 @@ class Graph:
             pass
             # TODO raise
 
+    def twoE(self):
+        for u, v in self.E:
+            yield u, v
+            yield v, u
+
     def density(self):
         n = len(self.V)
         return len(self.E) / (n * (n - 1) // 2)

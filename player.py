@@ -1,8 +1,6 @@
 class Player:
     def __init__(self, id):
         self.k = dict()
-        self.g = dict()
-        self.op = dict()
         self.id = id
         self.prob = 0
         self.best_s = ''

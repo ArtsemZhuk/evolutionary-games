@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from graph import *
 from utils import Timer
 from viz import draw_contour, draw_data
+from engine import fun
 from engine_exp import fun_exp
 from engine_mono import fun_mono
 from engine_sum import fun_sum
@@ -17,7 +18,8 @@ if __name__ == '__main__':
     # graph = ScaleFree(10, 3)
 
     timer = Timer()
-    res = fun_mono((graph, 10, .1, 3000, '01'))
+    res = fun((graph, 10, .1, 10000))
+    # res = fun_mono((graph, 10, .1, 3000, '01'))
     # res = fun_sum((graph, 5, .025, 100))
     timer.print_elapsed()
     plt.plot(res)

@@ -23,9 +23,6 @@ def run(graph, game, alpha, T, init_type='uniform'):
             p.mixed_s = np.array([prob, 1 - prob], dtype=np.float)
 
         p.deg = graph.deg(p.id)
-        # p.op = graph.N[p.id]
-        # for other in p.op:
-        #    p.g[other] = 0
 
     coop_rates = []
 
@@ -43,42 +40,10 @@ def run(graph, game, alpha, T, init_type='uniform'):
             p.sum_half /= p.sz()
             p.g_avg = p.mixed_s.dot(game.matrix).dot(p.sum_half.T)
 
-        """
-        for u, v in graph.E:
-            su = players[u].mixed_s
-            sv = players[v].mixed_s
-            pu, pv = game.mixed_payoff(su, sv)
-            players[u].g[v] = pu
-            players[v].g[u] = pv
-
-        for p in players:
-            p.g_avg = sum(p.g.values()) / p.sz()
-        """
-
-        for u, v in graph.E:
+        for u, v in graph.twoE():
             if players[u].best_g < players[v].g_avg:
                 players[u].best_g = players[v].g_avg
                 players[u].best_s = players[v].mixed_s
-
-            if players[v].best_g < players[u].g_avg:
-                players[v].best_g = players[u].g_avg
-                players[v].best_s = players[u].mixed_s
-
-        """
-        for p in players:
-            best_g = -INF
-            best_s = np.array([])
-            for other in p.op:
-                g = players[other].g_avg
-                if best_g < g:
-                    best_g = g
-                    best_s = players[other].mixed_s
-            if best_s == np.array([]) and len(p.op) != 0:
-                raise Exception(f'Not found best! u = {p.id} len = {len(p.op)}')
-
-            p.best_g = best_g
-            p.best_s = best_s
-        """
 
         for p in players:
             if not p.empty():
