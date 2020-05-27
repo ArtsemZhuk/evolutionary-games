@@ -34,3 +34,11 @@ def partition(l, r, n):
     chunk = (r - l) / n
     return np.arange(l + chunk, r + chunk / 2, chunk)
 
+
+def mix_strategies(gx, gy, sx, sy):
+    gs = (gx + gy) / 2
+    gx -= gs
+    gy -= gs
+
+    return (np.exp(gx) * sx + np.exp(gy) * sy) / (np.exp(gx) + np.exp(gy))
+

@@ -1,4 +1,5 @@
 import random
+import networkx as nx
 
 
 class Graph:
@@ -53,6 +54,11 @@ class Graph:
             d = self.deg(v)
             ans[d] = ans.get(d, 0) + 1
         return ans
+
+    def to_nx(self):
+        G = nx.Graph()
+        G.add_edges_from(self.E)
+        return G
 
 
 def ErdosRenyi(n, p):
