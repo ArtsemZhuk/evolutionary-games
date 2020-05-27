@@ -36,9 +36,10 @@ def partition(l, r, n):
 
 
 def mix_strategies(gx, gy, sx, sy):
-    gs = (gx + gy) / 2
-    gx -= gs
-    gy -= gs
-
-    return (np.exp(gx) * sx + np.exp(gy) * sy) / (np.exp(gx) + np.exp(gy))
+    d = gx - gy
+    if d > 0:
+        sx, sy = sy, sx
+        d = -d
+    t = np.exp(d)
+    return (t * sx + sy) / (t + 1)
 

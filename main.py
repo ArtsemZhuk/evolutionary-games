@@ -19,8 +19,9 @@ if __name__ == '__main__':
     # graph = Grid(40, 40)
     # graph = ScaleFree(10, 3)
 
-    res = run_exp(graph, 2, .1, 100)
-    print(res)
+    timer = Timer()
+    res = run_exp(graph, 2, .1, 1000)
+    timer.print_elapsed()
     plt.plot(res)
     plt.show()
     exit(0)
