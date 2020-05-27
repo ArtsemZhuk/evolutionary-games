@@ -4,19 +4,16 @@ import numpy as np
 class MixedPlayer:
     def __init__(self, id):
         self.id = id
-        self.op = dict()
-        self.g = dict()
         self.mixed_s = dict()
-        self.temp_s = np.array([0, 1])
         self.best_g = 0
         self.best_s = np.array([0, 1])
-        self.half = np.array([])
+        self.deg = 0
 
     def sz(self):
-        return max(1, len(self.op))
+        return max(1, self.deg)
 
     def empty(self):
-        return len(self.op) == 0
+        return self.deg == 0
 
     def coop_rate(self):
         if isinstance(self.mixed_s, dict):

@@ -11,13 +11,13 @@ from engine_sum import fun_sum
 
 if __name__ == '__main__':
     n = 100
-    p = 4. / n
+    p = 8. / n
     graph = ErdosRenyi(n, p)
     # graph = Grid(40, 40)
     # graph = ScaleFree(10, 3)
 
     timer = Timer()
-    # res = fun_mono((graph, 10, .1, 1000))
+    # res = fun_mono((graph, 10, .1, 3000))
     res = fun_sum((graph, 5, .025, 100))
     timer.print_elapsed()
     plt.plot(res)

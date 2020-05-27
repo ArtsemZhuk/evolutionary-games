@@ -10,27 +10,35 @@ INF = 10 ** 18
 
 def run(graph, game, alpha, T):
     n = len(graph.V)
-    players = dict([(i, MixedPlayer(id=i)) for i in graph.V])
+    # players = dict([(i, MixedPlayer(id=i)) for i in graph.V])
+    players = [MixedPlayer(id=i) for i in graph.V]
 
     # TODO move init to arguments
-    for p in players.values():
-        p.op = graph.N[p.id]
+    for p in players:
         prob = random.uniform(0, 1)
         p.mixed_s = np.array([prob, 1 - prob], dtype=np.float)
-        for other in p.op:
-            p.g[other] = 0
+        p.deg = graph.deg(p.id)
+        # p.op = graph.N[p.id]
+        # for other in p.op:
+        #    p.g[other] = 0
 
     coop_rates = []
 
     for _ in range(T):
-        for p in players.values():
+        for p in players:
             p.sum_half = np.zeros_like(p.mixed_s)
-            for other in p.op:
-                p.sum_half += players[other].mixed_s
+            p.best_g = -INF
+            p.best_s = np.array([])
+
+        for u, v in graph.E:
+            players[u].sum_half += players[v].mixed_s
+            players[v].sum_half += players[u].mixed_s
+
+        for p in players:
             p.sum_half /= p.sz()
             p.g_avg = p.mixed_s.dot(game.matrix).dot(p.sum_half.T)
-        """
 
+        """
         for u, v in graph.E:
             su = players[u].mixed_s
             sv = players[v].mixed_s
@@ -38,11 +46,21 @@ def run(graph, game, alpha, T):
             players[u].g[v] = pu
             players[v].g[u] = pv
 
-        for p in players.values():
+        for p in players:
             p.g_avg = sum(p.g.values()) / p.sz()
         """
 
-        for p in players.values():
+        for u, v in graph.E:
+            if players[u].best_g < players[v].g_avg:
+                players[u].best_g = players[v].g_avg
+                players[u].best_s = players[v].mixed_s
+
+            if players[v].best_g < players[u].g_avg:
+                players[v].best_g = players[u].g_avg
+                players[v].best_s = players[u].mixed_s
+
+        """
+        for p in players:
             best_g = -INF
             best_s = np.array([])
             for other in p.op:
@@ -55,12 +73,13 @@ def run(graph, game, alpha, T):
 
             p.best_g = best_g
             p.best_s = best_s
+        """
 
-        for p in players.values():
+        for p in players:
             if not p.empty():
                 p.mixed_s = mix_strategies(p.g_avg / alpha, p.best_g / alpha, p.mixed_s, p.best_s)
 
-        r = [p.coop_rate() for p in players.values()]
+        r = [p.coop_rate() for p in players]
         r_avg = sum(r) / n
         coop_rates.append(r_avg)
     return coop_rates

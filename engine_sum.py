@@ -13,9 +13,10 @@ def run(graph, game, alpha, T):
 
     # TODO move init to arguments
     for p in players.values():
-        p.op = graph.N[p.id]
         prob = random.uniform(0, 1)
         p.mixed_s = np.array([prob, 1 - prob], dtype=np.float)
+        p.op = graph.N[p.id]
+        p.g = dict()
         for other in p.op:
             p.g[other] = 0
 
