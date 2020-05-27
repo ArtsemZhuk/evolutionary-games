@@ -1,7 +1,6 @@
 import random
 
 from game import PrisonerDilemma
-from utils import mix_strategies
 from mixed_player import MixedPlayer
 import numpy as np
 
@@ -32,24 +31,13 @@ def run(graph, game, alpha, T):
 
         for p in players.values():
             p.g_avg = sum(p.g.values()) / p.sz()
+            p.temp_s = p.mixed_s * np.exp(p.g_avg / alpha)
 
         for p in players.values():
-            best_g = -INF
-            best_s = np.array([])
-            for other in p.op:
-                g = players[other].g_avg
-                if best_g < g:
-                    best_g = g
-                    best_s = players[other].mixed_s
-            if best_s == np.array([]) and len(p.op) != 0:
-                raise Exception(f'Not found best! u = {p.id} len = {len(p.op)}')
-
-            p.best_g = best_g
-            p.best_s = best_s
-
-        for p in players.values():
-            if not p.empty():
-                p.mixed_s = mix_strategies(p.g_avg / alpha, p.best_g / alpha, p.mixed_s, p.best_s)
+            p.mixed_s = np.array(p.temp_s)
+            for other in p.op():
+                p.mixed_s += p[other].temp_s
+            p.mixed_s /= np.sum(p.mixed_s)
 
         r = [p.coop_rate() for p in players.values()]
         r_avg = sum(r) / n
@@ -57,7 +45,7 @@ def run(graph, game, alpha, T):
     return coop_rates
 
 
-def fun_mono(tuple):
+def fun_sum(tuple):
     graph, b, alpha, T = tuple
     c = 1
     game = PrisonerDilemma(b / b, c / b)

@@ -6,7 +6,8 @@ class MixedPlayer:
         self.id = id
         self.op = dict()
         self.g = dict()
-        self.mixed_strategy = dict()
+        self.mixed_s = dict()
+        self.temp_s = np.array([0, 1])
         self.best_g = 0
         self.best_s = np.array([0, 1])
 
@@ -17,10 +18,10 @@ class MixedPlayer:
         return len(self.op) == 0
 
     def coop_rate(self):
-        if isinstance(self.mixed_strategy, dict):
-            return sum([t[0] for t in self.mixed_strategy.values()]) / self.sz()
+        if isinstance(self.mixed_s, dict):
+            return sum([t[0] for t in self.mixed_s.values()]) / self.sz()
         else:
-            return self.mixed_strategy[0]
+            return self.mixed_s[0]
 
     def rigidity(self):
         return 1 - abs(1 - 2 * self.coop_rate())
