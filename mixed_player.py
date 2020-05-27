@@ -13,8 +13,14 @@ class MixedPlayer:
     def sz(self):
         return max(1, len(self.op))
 
+    def empty(self):
+        return len(self.op) == 0
+
     def coop_rate(self):
-        return sum([t[0] for t in self.mixed_strategy.values()]) / self.sz()
+        if isinstance(self.mixed_strategy, dict):
+            return sum([t[0] for t in self.mixed_strategy.values()]) / self.sz()
+        else:
+            return self.mixed_strategy[0]
 
     def rigidity(self):
         return 1 - abs(1 - 2 * self.coop_rate())

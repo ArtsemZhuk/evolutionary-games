@@ -41,5 +41,5 @@ def mix_strategies(gx, gy, sx, sy):
         sx, sy = sy, sx
         d = -d
     t = np.exp(d)
-    return (t * sx + sy) / (t + 1)
+    return (sx * t + sy) / (t + 1)
 

@@ -5,10 +5,16 @@ from graph import *
 from utils import Timer
 from viz import draw_contour, draw_data
 from engine_exp import fun_exp
+from engine_mono import fun_mono
 
 
 def run_exp(graph, b, alpha, T):
     res = fun_exp((graph, b, alpha, T))
+    return res
+
+
+def run_mono(graph, b, alpha, T):
+    res = fun_mono((graph, b, alpha, T))
     return res
 
 
@@ -20,7 +26,7 @@ if __name__ == '__main__':
     # graph = ScaleFree(10, 3)
 
     timer = Timer()
-    res = run_exp(graph, 2, .1, 1000)
+    res = run_mono(graph, 4, .1, 1000)
     timer.print_elapsed()
     plt.plot(res)
     plt.show()
