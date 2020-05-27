@@ -8,15 +8,20 @@ import numpy as np
 INF = 10 ** 18
 
 
-def run(graph, game, alpha, T):
+def run(graph, game, alpha, T, init_type='uniform'):
     n = len(graph.V)
     # players = dict([(i, MixedPlayer(id=i)) for i in graph.V])
     players = [MixedPlayer(id=i) for i in graph.V]
 
     # TODO move init to arguments
     for p in players:
-        prob = random.uniform(0, 1)
-        p.mixed_s = np.array([prob, 1 - prob], dtype=np.float)
+        if init_type == 'uniform':
+            prob = random.uniform(0, 1)
+            p.mixed_s = np.array([prob, 1 - prob], dtype=np.float)
+        elif init_type == '01':
+            prob = random.choice([0, 1])
+            p.mixed_s = np.array([prob, 1 - prob], dtype=np.float)
+
         p.deg = graph.deg(p.id)
         # p.op = graph.N[p.id]
         # for other in p.op:
@@ -86,7 +91,8 @@ def run(graph, game, alpha, T):
 
 
 def fun_mono(tuple):
-    graph, b, alpha, T = tuple
+    # TODO add norm var
+    graph, b, alpha, T, init_type = tuple
     c = 1
     game = PrisonerDilemma(b / b, c / b)
     rates = run(graph, game, alpha, T)
