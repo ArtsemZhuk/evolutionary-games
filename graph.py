@@ -140,6 +140,31 @@ def Grid(n, m):
     return graph
 
 
+def is_connected(graph):
+    p = [v for v in graph.V]
+
+    def get(v):
+        if p[v] != v:
+            p[v] = get(p[v])
+        return p[v]
+
+    def uni(u, v):
+        u = get(u)
+        v = get(v)
+        if u != v:
+            p[u] = v
+
+    for u, v in graph.E:
+        uni(u, v)
+
+    cnt = 0
+    for v in graph.V:
+        if p[v] == v:
+            cnt += 1
+
+    return cnt == 1
+
+
 def GraphByDegrees(degs):
     a = []
     n = 0
@@ -167,8 +192,8 @@ def GraphByDegrees(degs):
                 break
             else:
                 graph.add_edge(u, v)
-        # TODO check if connected
-        if good:
+
+        if good and is_connected(graph):
             return graph
 
 

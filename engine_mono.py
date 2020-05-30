@@ -8,7 +8,7 @@ import numpy as np
 INF = 10 ** 18
 
 
-def run(graph, game, alpha, T, init_type='uniform'):
+def run(graph, game, alpha, T, init_type='uniform', sets=dict()):
     n = len(graph.V)
     # players = dict([(i, MixedPlayer(id=i)) for i in graph.V])
     players = [MixedPlayer(id=i) for i in graph.V]
@@ -24,7 +24,9 @@ def run(graph, game, alpha, T, init_type='uniform'):
 
         p.deg = graph.deg(p.id)
 
-    coop_rates = []
+    rates = dict()
+    for key in sets.keys():
+        rates[key] = []
 
     for _ in range(T):
         for p in players:
@@ -49,16 +51,16 @@ def run(graph, game, alpha, T, init_type='uniform'):
             if not p.empty():
                 p.mixed_s = mix_strategies(p.g_avg / alpha, p.best_g / alpha, p.mixed_s, p.best_s)
 
-        r = [p.coop_rate() for p in players]
-        r_avg = sum(r) / n
-        coop_rates.append(r_avg)
-    return coop_rates
+        for key, set in sets.items():
+            rate = sum(players[id].coop_rate() for id in set) / max(len(set), 1)
+            rates[key].append(rate)
+    return rates
 
 
 def fun_mono(tuple):
     # TODO add norm var
-    graph, b, alpha, T, init_type = tuple
+    graph, b, alpha, T, init_type, sets = tuple
     c = 1
     game = PrisonerDilemma(b / b, c / b)
-    rates = run(graph, game, alpha, T)
+    rates = run(graph, game, alpha, T, init_type, sets)
     return rates

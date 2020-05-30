@@ -51,19 +51,21 @@ def np_dot():
 
 
 if __name__ == '__main__':
-    np_dot()
-    exit(0)
+    # np_dot()
+    # exit(0)
     # draw_small_world(10000, 20, .7)
     # graph = RandomRegular(100, 3)
     # graph = GraphByDegrees({3: 10, 5: 10, 7: 10})
-    graphs = [GraphByDegrees({2: 500, 3: 500}) for _ in range(100)]
-    draw_spectrum(graphs)
-    exit(0)
+    graph = GraphByDegrees({2: 30, 4: 30})
+    # graph = GraphByDegrees({2: 100})
+    # graphs = [GraphByDegrees({2: 500, 3: 500}) for _ in range(100)]
+    # draw_spectrum(graphs)
+    # exit(0)
 
     G = nx.Graph()
     G.add_edges_from(graph.E)
     plt.subplot()
-    nx.draw(G)
+    nx.draw_spectral(G)
     plt.show()
 
 

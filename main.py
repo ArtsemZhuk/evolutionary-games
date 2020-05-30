@@ -27,8 +27,8 @@ if __name__ == '__main__':
         sets[d].append(v)
     sets['all'] = graph.V
 
-    res = fun((graph, 4, .1, 1000, '01', sets))
-    # res = fun_mono((graph, 10, .1, 3000, '01'))
+    # res = fun((graph, 4, .1, 1000, '01', sets))
+    res = fun_mono((graph, 3, .1, 300, '01', sets))
     # res = fun_sum((graph, 5, .025, 100))
     timer.print_elapsed()
     # plt.plot(res)
