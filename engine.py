@@ -17,10 +17,9 @@ def run(graph, game, alpha, T, sets=dict()):
         for other in graph.N[p.id]:
             p.k[other] = random.choices(['C', 'D'], weights=[1, 1])[0]
 
-    coop_rates = []
-    set_rates = dict()
+    rates = dict()
     for key in sets.keys():
-        set_rates[key] = []
+        rates[key] = []
 
     for _ in range(T):
         for p in players:
@@ -53,13 +52,9 @@ def run(graph, game, alpha, T, sets=dict()):
 
         for key, set in sets.items():
             rate = sum(players[id].coop_rate() for id in set) / max(len(set), 1)
-            set_rates[key].append(rate)
+            rates[key].append(rate)
 
-        r = [p.coop_rate() for p in players]
-        r_avg = sum(r) / n
-        coop_rates.append(r_avg)
-
-    return coop_rates, set_rates
+    return rates
 
 
 def fun(tuple):

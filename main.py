@@ -25,16 +25,18 @@ if __name__ == '__main__':
         if d not in sets:
             sets[d] = []
         sets[d].append(v)
+    sets['all'] = graph.V
 
-    res, degs = fun((graph, 4, .1, 1000, '01', sets))
+    res = fun((graph, 4, .1, 1000, '01', sets))
     # res = fun_mono((graph, 10, .1, 3000, '01'))
     # res = fun_sum((graph, 5, .025, 100))
     timer.print_elapsed()
     # plt.plot(res)
     for d in range(20):
         if d in sets and len(sets[d]) >= 20:
-            plt.plot(degs[d], label=d)
-        plt.legend()
+            plt.plot(res[d], label=d)
+    plt.plot(res['all'], label='all')
+    plt.legend()
     plt.show()
     exit(0)
 
