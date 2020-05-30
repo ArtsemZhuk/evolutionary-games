@@ -7,7 +7,7 @@ from utils import sigmoid
 INF = 10 ** 18
 
 
-def run(graph, game, alpha, T):
+def run(graph, game, alpha, T, sets=dict()):
     n = len(graph.V)
     players = [Player(id=i) for i in graph.V]
 
@@ -18,6 +18,9 @@ def run(graph, game, alpha, T):
             p.k[other] = random.choices(['C', 'D'], weights=[1, 1])[0]
 
     coop_rates = []
+    set_rates = dict()
+    for key in sets.keys():
+        set_rates[key] = []
 
     for _ in range(T):
         for p in players:
@@ -48,15 +51,20 @@ def run(graph, game, alpha, T):
                 if random.uniform(0, 1) < p.prob:
                     p.k[other] = p.best_s
 
+        for key, set in sets.items():
+            rate = sum(players[id].coop_rate() for id in set) / max(len(set), 1)
+            set_rates[key].append(rate)
+
         r = [p.coop_rate() for p in players]
         r_avg = sum(r) / n
         coop_rates.append(r_avg)
-    return coop_rates
+
+    return coop_rates, set_rates
 
 
 def fun(tuple):
-    graph, b, alpha, T, _ = tuple
+    graph, b, alpha, T, _, sets = tuple
     c = 1
     game = PrisonerDilemma(b / b, c / b)
-    rates = run(graph, game, alpha, T)
+    rates = run(graph, game, alpha, T, sets)
     return rates

@@ -10,6 +10,7 @@ class Player:
         return max(1, len(self.k))
 
     def coop_rate(self):
+        # TODO SPEED UP
         cnt = 0
         for key in self.k.values():
             if key == 'C':

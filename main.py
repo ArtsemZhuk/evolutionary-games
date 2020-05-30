@@ -11,18 +11,30 @@ from engine_sum import fun_sum
 
 
 if __name__ == '__main__':
-    n = 100
+    n = 1000
     p = 4. / n
     graph = ErdosRenyi(n, p)
     # graph = Grid(40, 40)
     # graph = ScaleFree(10, 3)
 
     timer = Timer()
-    res = fun((graph, 10, .1, 10000, '01'))
+
+    sets = dict()
+    for v in graph.V:
+        d = graph.deg(v)
+        if d not in sets:
+            sets[d] = []
+        sets[d].append(v)
+
+    res, degs = fun((graph, 4, .1, 1000, '01', sets))
     # res = fun_mono((graph, 10, .1, 3000, '01'))
     # res = fun_sum((graph, 5, .025, 100))
     timer.print_elapsed()
-    plt.plot(res)
+    # plt.plot(res)
+    for d in range(20):
+        if d in sets and len(sets[d]) >= 20:
+            plt.plot(degs[d], label=d)
+        plt.legend()
     plt.show()
     exit(0)
 
