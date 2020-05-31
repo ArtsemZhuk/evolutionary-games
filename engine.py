@@ -3,6 +3,7 @@ import random
 from game import PrisonerDilemma
 from player import Player
 from utils import sigmoid
+from engine_common import store_rates
 
 INF = 10 ** 18
 
@@ -50,9 +51,7 @@ def run(graph, game, alpha, T, sets=dict()):
                 if random.uniform(0, 1) < p.prob:
                     p.k[other] = p.best_s
 
-        for key, set in sets.items():
-            rate = sum(players[id].coop_rate() for id in set) / max(len(set), 1)
-            rates[key].append(rate)
+        store_rates(rates, players, sets)
 
     return rates
 
