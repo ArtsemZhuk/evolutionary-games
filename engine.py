@@ -12,23 +12,22 @@ def run(graph, game, alpha, T, sets=dict()):
     n = len(graph.V)
     players = [Player(id=i) for i in graph.V]
 
-    # TODO move init to arguments
-    for p in players:
-        p.k = dict()
-        for other in graph.N[p.id]:
-            p.k[other] = random.choices(['C', 'D'], weights=[1, 1])[0]
+    # TODO vary init
+    sus = random.choices([0, 1], k=len(graph.E))
+    svs = random.choices([0, 1], k=len(graph.E))
 
     rates = dict()
     for key in sets.keys():
         rates[key] = []
 
+    for p in players:
+        p.deg = graph.deg(p.id)
+
     for _ in range(T):
         for p in players:
             p.g_avg = .0
 
-        for u, v in graph.E:
-            su = players[u].k[v]
-            sv = players[v].k[u]
+        for (u, v), su, sv in zip(graph.E, sus, svs):
             pu, pv = game.payoff(su, sv)
             players[u].g_avg += pu
             players[v].g_avg += pv
@@ -38,18 +37,34 @@ def run(graph, game, alpha, T, sets=dict()):
             p.best_s = None
             p.g_avg /= p.sz()
 
-        for u, v in graph.twoE():
+        for (u, v), su, sv in zip(graph.E, sus, svs):
+
             if players[u].best_g < players[v].g_avg:
                 players[u].best_g = players[v].g_avg
-                players[u].best_s = players[v].k[u]
+                players[u].best_s = sv
+
+            if players[v].best_g < players[u].g_avg:
+                players[v].best_g = players[u].g_avg
+                players[v].best_s = su
 
         for p in players:
             delta = (p.best_g - p.g_avg)
             # TODO b = 1 ensure ????
             p.prob = sigmoid(delta / alpha)
-            for other in p.k.keys():
-                if random.uniform(0, 1) < p.prob:
-                    p.k[other] = p.best_s
+
+        for i in range(len(graph.E)):
+            u, v = graph.E[i]
+            if random.uniform(0, 1) < players[u].prob:
+                sus[i] = players[u].best_s
+            if random.uniform(0, 1) < players[v].prob:
+                svs[i] = players[v].best_s
+
+        for p in players:
+            p.cnt = 0
+
+        for (u, v), su, sv in zip(graph.E, sus, svs):
+            players[u].cnt += su
+            players[v].cnt += sv
 
         store_rates(rates, players, sets)
 
