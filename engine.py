@@ -63,8 +63,8 @@ def run(graph, game, alpha, T, sets=dict()):
             p.cnt = 0
 
         for (u, v), su, sv in zip(graph.E, sus, svs):
-            players[u].cnt += su
-            players[v].cnt += sv
+            players[u].cnt += 1 - su
+            players[v].cnt += 1 - sv
 
         store_rates(rates, players, sets)
 
