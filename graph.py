@@ -65,6 +65,9 @@ class Graph:
         G.add_edges_from(self.E)
         return G
 
+    def max_degree(self):
+        return max(self.deg(v) for v in self.V)
+
 
 def ErdosRenyi(n, p):
     graph = Graph()
@@ -201,4 +204,5 @@ def RandomRegular(n, k):
     if n * k % 2 == 1 or n <= k:
         raise Exception(f'Can build regular graph with {n} vertices and deg {k}')
     return GraphByDegrees({k : n})
+
 
