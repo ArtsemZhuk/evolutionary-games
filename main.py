@@ -47,16 +47,17 @@ if __name__ == '__main__':
 
     timer = Timer()
 
-    sets = coreness(graph, list(range(graph.max_degree() + 1)))
+    # sets = coreness(graph, list(range(graph.max_degree() + 1)))
+    sets = {'l': list(range(n))}
 
-    res = fun((graph, 4.1, .1, 10000, '01', sets))
-    # res = fun_mono((graph, 3, .1, 300, '01', sets))
+    # res = fun((graph, 4.1, .1, 1000, '01', sets))
+    res = fun_mono((graph, 5, .1, 1000, '01', sets))
     # res = fun_sum((graph, 4, .025, 100, '01', sets))
     timer.print_elapsed()
     # plt.plot(res)
-    for d in range(20):
-        if d in sets and len(sets[d]) >= 1:
-            plt.plot(res[d], label=d)
+    for key in sets:
+        if len(sets[key]) >= 1:
+            plt.plot(res[key], label=key)
     # plt.plot(res['all'], label='all')
     plt.legend()
     plt.show()

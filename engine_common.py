@@ -20,5 +20,10 @@ def init_mixed_players(n, init_type, graph):
 
 def store_rates(rates, players, sets):
     for key, set in sets.items():
-        rate = sum(players[id].coop_rate() for id in set) / max(len(set), 1)
+        def getter(p):
+            if str(key).startswith('l'):
+                return p.rigidity()
+            else:
+                return p.coop_rate()
+        rate = sum(getter(players[id]) for id in set) / max(len(set), 1)
         rates[key].append(rate)
