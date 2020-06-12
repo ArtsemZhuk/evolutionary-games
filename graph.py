@@ -113,9 +113,9 @@ def Circle(n, k=1):
 
 
 def SmallWorld(n, k, beta):
-    graph = Circle(n, k)
+    graph = Circle(n, k // 2)
     for i in range(n):
-        for t in range(1, k + 1):
+        for t in range(1, k // 2 + 1):
             if random.uniform(0, 1) < beta: # TODO replace with bin variable, add to utils
                 j = (i + t) % n
                 graph.remove_edge(i, j)
