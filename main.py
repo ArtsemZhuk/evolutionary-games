@@ -8,6 +8,7 @@ from engine import fun
 from engine_exp import fun_exp
 from engine_mono import fun_mono
 from engine_sum import fun_sum
+from engine_tot import fun_tot
 from graph_toolset import coreness, degs
 import seaborn as sns
 
@@ -48,10 +49,11 @@ if __name__ == '__main__':
     timer = Timer()
 
     # sets = coreness(graph, list(range(graph.max_degree() + 1)))
-    sets = {'l': list(range(n))}
+    sets = {'l': list(range(n)), 'rho': list(range(n))}
 
-    # res = fun((graph, 4.1, .1, 1000, '01', sets))
-    res = fun_mono((graph, 5, .1, 1000, '01', sets))
+    # res = fun((graph, 5, .1, 1000, '01', sets))
+    res = fun_tot((graph, 20, .1, 1000, '01', sets))
+    # res = fun_mono((graph, 5, .1, 1000, '01', sets))
     # res = fun_sum((graph, 4, .025, 100, '01', sets))
     timer.print_elapsed()
     # plt.plot(res)
