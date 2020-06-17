@@ -9,7 +9,7 @@ from engine_exp import fun_exp
 from engine_mono import fun_mono
 from engine_sum import fun_sum
 from engine_tot import fun_tot
-from graph_toolset import coreness, degs
+from graph_toolset import coreness, degs, biggest_degs
 import seaborn as sns
 
 
@@ -40,11 +40,17 @@ def draw_degrees(graph):
 if __name__ == '__main__':
     n = 1000
     p = 4. / n
-    graph = ErdosRenyi(n, p)
+    # graph = ErdosRenyi(n, p)
     # draw_corenees(graph)
     # draw_degrees(graph)
     # graph = Grid(40, 40)
-    # graph = ScaleFree(10, 3)
+    graph = ScaleFree(1000, 4)
+    sets = biggest_degs(graph, range(10))
+    for i in range(10):
+        v = sets[i][0]
+        print(f'{v} -> {graph.deg(v)}')
+    print(f'avg deg = {graph.average_degree()}')
+    exit(0)
 
     timer = Timer()
 

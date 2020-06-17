@@ -49,4 +49,12 @@ def coreness(graph, keys):
     return sets
 
 
+def biggest_degs(graph, keys):
+    sets = dict()
+
+    x = sorted(graph.V, key=lambda v: -graph.deg(v))
+    for key in keys:
+        sets[key] = [x[key]]
+    return sets
+
 
