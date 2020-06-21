@@ -23,6 +23,8 @@ def store_rates(rates, players, sets):
         def getter(p):
             if str(key).startswith('l'):
                 return p.rigidity()
+            elif str(key).startswith('star'):
+                return p.star
             else:
                 return p.coop_rate()
         rate = sum(getter(players[id]) for id in set) / max(len(set), 1)

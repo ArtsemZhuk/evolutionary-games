@@ -9,6 +9,7 @@ from engine_exp import fun_exp
 from engine_mono import fun_mono
 from engine_sum import fun_sum
 from engine_tot import fun_tot
+from engine_mean import fun_mean
 from graph_toolset import coreness, degs, biggest_degs
 import seaborn as sns
 
@@ -40,32 +41,49 @@ def draw_degrees(graph):
 if __name__ == '__main__':
     n = 1000
     p = 4. / n
-    # graph = ErdosRenyi(n, p)
+    graph = ErdosRenyi(n, p)
     # draw_corenees(graph)
     # draw_degrees(graph)
     # graph = Grid(40, 40)
-    graph = ScaleFree(1000, 4)
+    # graph = ScaleFree(1000, 4)
     sets = biggest_degs(graph, range(10))
     for i in range(10):
-        v = sets[i][0]
-        print(f'{v} -> {graph.deg(v)}')
-    print(f'avg deg = {graph.average_degree()}')
-    exit(0)
+         v = sets[i][0]
+         print(f'{v} -> {graph.deg(v)}')
+    # print(f'avg deg = {graph.average_degree()}')
+    # exit(0)
+
+    star_sets = dict()
+    # for key, value in sets.items():
+    for v in graph.V:
+        star_sets[f'star{v}'] = [v]
+    # print(star_sets)
 
     timer = Timer()
 
     # sets = coreness(graph, list(range(graph.max_degree() + 1)))
-    sets = {'l': list(range(n)), 'rho': list(range(n))}
+    # sets = {
+        # 'l': list(range(n)),
+    #    'rho': list(range(n))
+    # }
 
-    # res = fun((graph, 5, .1, 1000, '01', sets))
-    res = fun_tot((graph, 20, .1, 1000, '01', sets))
+    # sets['rho'] = list(range(n))
+    T = 100
+
+    res = fun((graph, 5, .1, T, '01', star_sets))
+    # res = fun_tot((graph, 20, .1, 1000, '01', sets))
     # res = fun_mono((graph, 5, .1, 1000, '01', sets))
     # res = fun_sum((graph, 4, .025, 100, '01', sets))
+    # res = fun_mean((graph, 30, .1, 10, '01', sets))
     timer.print_elapsed()
     # plt.plot(res)
-    for key in sets:
-        if len(sets[key]) >= 1:
-            plt.plot(res[key], label=key)
+    for key in star_sets:
+        if len(star_sets[key]) >= 1 and key != 'rho':
+            # plt.plot(res[key], label=key)
+            plt.scatter(list(range(T)), res[key], c='blue', alpha=.1, s=.1)
+        elif key == 'rho':
+            plt.plot(res[key], label=r'$\rho$')
+
     # plt.plot(res['all'], label='all')
     plt.legend()
     plt.show()
