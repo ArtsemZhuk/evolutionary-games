@@ -121,13 +121,15 @@ def quad_switch(graph: nx.Graph, u1, v1, u2, v2) -> bool:
     if graph.has_edge(u1, u2) or graph.has_edge(v1, v2):
         return False
 
+    num_connected = nx.number_connected_components(graph)
+
     graph.remove_edge(u1, v1)
     graph.remove_edge(u2, v2)
 
     graph.add_edge(u1, u2)
     graph.add_edge(v1, v2)
 
-    if not nx.is_connected(graph):
+    if nx.number_connected_components(graph) != num_connected:
         graph.remove_edge(u1, u2)
         graph.remove_edge(v1, v2)
 
@@ -141,12 +143,12 @@ def quad_switch(graph: nx.Graph, u1, v1, u2, v2) -> bool:
 
 def move_assortativity(graph: nx.Graph, by):
     fall_rate = 0
-    while by != 0:
+    for _ in range(abs(by)):
         # count = Counter([graph.degree(v) for v in graph.nodes()])
         # print(count)
 
-        if fall_rate >= 100:
-            return
+        # if fall_rate >= 100:
+        #    return
 
         # todo fix for more than two different degrees
         e = dict()
