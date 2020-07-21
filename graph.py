@@ -2,76 +2,9 @@ import random
 import networkx as nx
 
 
-class Graph:
-    def __init__(self):
-        self.V = []
-        self.E = []
-        self.N = dict()
-
-    def add_vertices(self, vs):
-        for v in vs:
-            self.V.append(v)
-            self.N[v] = []
-
-    def add_edge(self, u, v):
-        if u not in self.V or v not in self.V:
-            raise Exception(f"{u} or {v} no present in {self.V}")
-        if u == v:
-            raise Exception(f'Trying to make a loop over {u}!')
-
-        if (u, v) in self.E or (v, u) in self.E:
-            return
-
-        self.E.append((u, v))
-        self.N[u].append(v)
-        self.N[v].append(u)
-
-    def remove_edge(self, u, v):
-        # TODO add checks
-        self.N[u].remove(v)
-        self.N[v].remove(u)
-        if (u, v) in self.E:
-            self.E.remove((u, v))
-        elif (v, u) in self.E:
-            self.E.remove((v, u))
-        else:
-            pass
-            # TODO raise
-
-    def twoE(self):
-        for u, v in self.E:
-            yield u, v
-            yield v, u
-
-    def density(self):
-        n = len(self.V)
-        return len(self.E) / (n * (n - 1) // 2)
-
-    def average_degree(self):
-        return 2 * len(self.E) / len(self.V)
-
-    def deg(self, v):
-        return len(self.N[v])
-
-    def degrees(self):
-        ans = dict()
-        for v in self.V:
-            d = self.deg(v)
-            ans[d] = ans.get(d, 0) + 1
-        return ans
-
-    def to_nx(self):
-        G = nx.Graph()
-        G.add_edges_from(self.E)
-        return G
-
-    def max_degree(self):
-        return max(self.deg(v) for v in self.V)
-
-
 def ErdosRenyi(n, p):
-    graph = Graph()
-    graph.add_vertices(range(n))
+    graph = nx.Graph()
+    graph.add_nodes_from(range(n))
     for i in range(n):
         for j in range(i + 1, n):
             if random.uniform(0, 1) < p:
@@ -85,7 +18,7 @@ def FullGraph(n):
 
 def ScaleFree(n, m):
     graph = FullGraph(m + 1)
-    us = [v for _ in range(m) for v in graph.V]
+    us = [v for _ in range(m) for v in graph.V()]
     for v in range(m + 1, n):
         neighbours = set()
         while len(neighbours) < m:
@@ -93,7 +26,7 @@ def ScaleFree(n, m):
             neighbours.add(to)
             # TODO think how optimize!
 
-        graph.add_vertices([v])
+        graph.add_node(v)
         for u in neighbours:
             graph.add_edge(u, v)
             us.append(u)
@@ -103,8 +36,8 @@ def ScaleFree(n, m):
 
 
 def Circle(n, k=1):
-    graph = Graph()
-    graph.add_vertices(range(n))
+    graph = nx.Graph()
+    graph.add_nodes_from(range(n))
     for i in range(n):
         for t in range(1, k + 1):
             j = (i + t) % n
@@ -121,7 +54,7 @@ def SmallWorld(n, k, beta):
                 graph.remove_edge(i, j)
                 while True:
                     j = random.randint(0, n - 1)
-                    if j != i and j not in graph.N[i]:
+                    if j != i and j not in graph.neighbors(i):
                         break
                 graph.add_edge(i, j)
     return graph
@@ -132,8 +65,8 @@ def MultiGrid(ns):
 
 
 def Grid(n, m):
-    graph = Graph()
-    graph.add_vertices([(i, j) for i in range(n) for j in range(m)])
+    graph = nx.Graph()
+    graph.add_nodes_from([(i, j) for i in range(n) for j in range(m)])
     for i in range(n):
         for j in range(m):
             for dx, dy in [(-1, 0), (0, +1), (+1, 0), (0, -1)]:
@@ -143,32 +76,7 @@ def Grid(n, m):
     return graph
 
 
-def is_connected(graph):
-    p = [v for v in graph.V]
-
-    def get(v):
-        if p[v] != v:
-            p[v] = get(p[v])
-        return p[v]
-
-    def uni(u, v):
-        u = get(u)
-        v = get(v)
-        if u != v:
-            p[u] = v
-
-    for u, v in graph.E:
-        uni(u, v)
-
-    cnt = 0
-    for v in graph.V:
-        if p[v] == v:
-            cnt += 1
-
-    return cnt == 1
-
-
-def GraphByDegrees(degs):
+def GraphByDegrees(degs, assortativity_inc=0):
     a = []
     n = 0
     for d, cnt in degs.items():
@@ -182,27 +90,157 @@ def GraphByDegrees(degs):
     while True:
         random.shuffle(a)
 
-        graph = Graph()
-        graph.add_vertices(range(n))
+        graph = nx.Graph()
+        graph.add_nodes_from(range(n))
 
         good = True
 
         for i in range(0, len(a), 2):
             u = a[i]
             v = a[i + 1]
-            if u == v or (u, v) in graph.E or (v, u) in graph.E:
+            if u == v or graph.has_edge(u, v):
                 good = False
                 break
             else:
                 graph.add_edge(u, v)
 
-        if good and is_connected(graph):
+        if good and nx.is_connected(graph):
+            while assortativity_inc < 0:
+                pass
+
+            while assortativity_inc > 0:
+                pass
+
             return graph
+
+
+def quad_switch(graph: nx.Graph, u1, v1, u2, v2) -> bool:
+    if not graph.has_edge(u1, v1) or not graph.has_edge(u2, v2):
+        return False
+
+    if graph.has_edge(u1, u2) or graph.has_edge(v1, v2):
+        return False
+
+    graph.remove_edge(u1, v1)
+    graph.remove_edge(u2, v2)
+
+    graph.add_edge(u1, u2)
+    graph.add_edge(v1, v2)
+
+    if not nx.is_connected(graph):
+        graph.remove_edge(u1, u2)
+        graph.remove_edge(v1, v2)
+
+        graph.add_edge(u1, v1)
+        graph.add_edge(u2, v2)
+
+        return False
+
+    return True
+
+
+def move_assortativity(graph: nx.Graph, by):
+    fall_rate = 0
+    while by != 0:
+        # count = Counter([graph.degree(v) for v in graph.nodes()])
+        # print(count)
+
+        if fall_rate >= 100:
+            return
+
+        # todo fix for more than two different degrees
+        e = dict()
+        for u, v in graph.edges():
+            du = graph.degree(u)
+            dv = graph.degree(v)
+
+            if du > dv:
+                u, v = v, u
+                du, dv = dv, du
+
+            d = du, dv
+
+            if (by < 0) != (du == dv):
+                continue
+
+            if d not in e:
+                e[d] = []
+            e[d].append((u, v))
+
+        good = True
+
+        if by > 0:
+            # todo fix
+            key = random.choice(list(e.keys()))
+
+            if len(e[key]) < 2:
+                good = False
+            else:
+                e1 = random.choice(e[key])
+                e[key].remove(e1)
+                e2 = random.choice(e[key])
+                e[key].remove(e2)
+        else:
+
+            if len(e) < 2:
+                good = False
+            else:
+                keys = list(e.keys())
+
+                key1 = random.choice(keys)
+                keys.remove(key1)
+                key2 = random.choice(keys)
+
+                e1 = random.choice(e[key1])
+                e2 = random.choice(e[key2])
+
+        if good:
+            u1, v1 = e1
+            u2, v2 = e2
+            if quad_switch(graph, u1, v1, u2, v2):
+                by -= -1 if by < 0 else +1
+            else:
+                good = False
+
+        if not good:
+            fall_rate += 1
 
 
 def RandomRegular(n, k):
     if n * k % 2 == 1 or n <= k:
         raise Exception(f'Can build regular graph with {n} vertices and deg {k}')
-    return GraphByDegrees({k : n})
+    return GraphByDegrees({k: n})
+
+
+def ER(t):
+    return ErdosRenyi(*t)
+
+
+def SF(t):
+    return ScaleFree(*t)
+
+
+def WS(t):
+    return SmallWorld(*t)
+
+
+def er_graphs(cnt, n, k):
+    for _ in range(cnt):
+        yield ErdosRenyi(n, k / n)
+
+
+def sf_graphs(cnt, n, m):
+    for _ in range(cnt):
+        yield ScaleFree(n, m)
+
+
+def ws_graphs(cnt, n, k, beta):
+    for _ in range(cnt):
+        yield SmallWorld(n, k, beta)
+
+
+def r_graphs(cnt, degs):
+    for _ in range(cnt):
+        yield GraphByDegrees(degs)
 
 

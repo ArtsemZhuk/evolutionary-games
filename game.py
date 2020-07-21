@@ -12,6 +12,9 @@ class PrisonerDilemma:
         x, y = args
         return self.matrix[x, y], self.matrix[y, x]
 
+    def real_payoff(self, x, y):
+        return (1-y) - (1-x) / self.b, (1-x) - (1-y) / self.b
+
     def mixed_payoff(self, x, y):
         px = x.dot(self.matrix).dot(y.T)
         py = y.dot(self.matrix).dot(x.T)

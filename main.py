@@ -10,6 +10,7 @@ from engine_mono import fun_mono
 from engine_sum import fun_sum
 from engine_tot import fun_tot
 from engine_mean import fun_mean
+from engine_mono_check import fun_mono_check
 from graph_toolset import coreness, degs, biggest_degs
 import seaborn as sns
 
@@ -39,7 +40,7 @@ def draw_degrees(graph):
 
 
 if __name__ == '__main__':
-    n = 1000
+    n = 10
     p = 4. / n
     graph = ErdosRenyi(n, p)
     # draw_corenees(graph)
@@ -52,6 +53,7 @@ if __name__ == '__main__':
          print(f'{v} -> {graph.deg(v)}')
     # print(f'avg deg = {graph.average_degree()}')
     # exit(0)
+
 
     star_sets = dict()
     # for key, value in sets.items():
@@ -68,19 +70,21 @@ if __name__ == '__main__':
     # }
 
     # sets['rho'] = list(range(n))
-    T = 100
+    T = 10
 
-    res = fun((graph, 5, .1, T, '01', star_sets))
+    sets = {'rho': graph.V}
+    # res = fun((graph, 5, .1, T, '01', star_sets))
+    res = fun_mono_check((graph, 100, .1, T, '01', sets))
     # res = fun_tot((graph, 20, .1, 1000, '01', sets))
     # res = fun_mono((graph, 5, .1, 1000, '01', sets))
     # res = fun_sum((graph, 4, .025, 100, '01', sets))
     # res = fun_mean((graph, 30, .1, 10, '01', sets))
     timer.print_elapsed()
     # plt.plot(res)
-    for key in star_sets:
-        if len(star_sets[key]) >= 1 and key != 'rho':
-            # plt.plot(res[key], label=key)
-            plt.scatter(list(range(T)), res[key], c='blue', alpha=.1, s=.1)
+    for key in sets:
+        if len(sets[key]) >= 1 and key != 'rho':
+            plt.plot(res[key], label=key)
+            # plt.scatter(list(range(T)), res[key], c='blue', alpha=.1, s=.1)
         elif key == 'rho':
             plt.plot(res[key], label=r'$\rho$')
 
