@@ -1,10 +1,15 @@
 import networkx as nx
-from graph import GraphByDegrees, ErdosRenyi
+from graph import GraphByDegrees, ErdosRenyi, ScaleFree
 import matplotlib.pyplot as plt
 import numpy as np
+import scipy.stats as st
 
 
-def get_b_stars(graph: nx.Graph):
+def density(n, k):
+    return st.binom.pmf(k, n, .5)
+
+
+def get_b_stars(graph: nx.Graph, adjusted=False):
     cnt = {}
     for u, v in graph.edges():
         du = graph.degree(u)
@@ -26,16 +31,22 @@ def get_b_stars(graph: nx.Graph):
                             ratio = (av * du - au * dv) / (bv * du - bu * dv)
                             if ratio not in weights:
                                 weights[ratio] = 0
-                            weights[ratio] += freq
+                            by = freq
+                            if adjusted:
+                                by *= density(du, au) * density(du, bu) * density(dv, av) * density(dv, bv)
+                            weights[ratio] += by
     return weights
 
 
 if __name__ == '__main__':
-    graph = GraphByDegrees({2: 5000, 3: 5000})
-    # graph = ErdosRenyi(1000, 5 / 1000)
-    ratios = get_b_stars(graph)
+    # graph = GraphByDegrees({2: 5000, 3: 5000})
+    graph = ErdosRenyi(1000, 5 / 1000)
+    # graph = ScaleFree(100, 5)
+    ratios = get_b_stars(graph, adjusted=True)
     ratios = {k: v for k, v in ratios.items() if 1 < k <= 10}
     # plt.hist(list(ratios.keys()), weights=list(ratios.values()), bins=100)
+    # plt.show()
+    # exit(0)
     xs = np.linspace(1, 10, 100)
 
     total = sum(ratios.values())

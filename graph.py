@@ -18,7 +18,7 @@ def FullGraph(n):
 
 def ScaleFree(n, m):
     graph = FullGraph(m + 1)
-    us = [v for _ in range(m) for v in graph.V()]
+    us = [v for _ in range(m) for v in graph.nodes()]
     for v in range(m + 1, n):
         neighbours = set()
         while len(neighbours) < m:
