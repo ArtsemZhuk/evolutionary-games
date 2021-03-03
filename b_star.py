@@ -63,7 +63,7 @@ def get_b_stars_single(graph: nx.Graph):
 
 
 if __name__ == '__main__':
-    graph = GraphByDegrees({5: 5000})
+    graph = GraphByDegrees({3: 5000})
     # graph = GraphByDegrees({3: 5000, 5: 5000})
     # graph = ErdosRenyi(1000, 5 / 1000)
     # graph = ScaleFree(100, 5)
